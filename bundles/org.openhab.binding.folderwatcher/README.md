@@ -43,16 +43,14 @@ The `s3bucket` thing has the following configuration options:
 | awsKey         | AWS access key       | AWS access key                                 | no       | n/a           |
 | awsSecret      | AWS secret           | AWS secret                                     | no       | n/a           |
 | awsRegion      | AWS Region           | AWS Region of S3 bucket                        | yes      | ""            |
-| s3Anonymous      | Anonymous connection | Connect anonymously (works for public buckets) | yes      | true          |
+| s3Anonymous    | Anonymous connection | Connect anonymously (works for public buckets) | yes      | true          |
 ## Events
 
 This binding currently supports the following events:
 
-| Channel Type ID | Item Type    | Description                                                                            |
-|-----------------|--------------|----------------------------------------------------------------------------------------|
-| newftpfile | String       | A new file name discovered on FTP                                                      |
-| newlocalfile | String       | A new file name discovered in local folder                                                      |
-| news3file | String       | A new file name discovered in S3                                                    |
+| Channel Type ID | Item Type | Description                |
+|-----------------|-----------|----------------------------|
+| newfile        | String    | A new file name discovered |
 
 ## Full Example
 
@@ -60,7 +58,7 @@ Thing configuration:
 
 ```java
 folderwatcher:localfolder:myLocalFolder [ localDir="/myfolder", pollIntervalLocal=60, listHiddenLocal="false", listRecursiveLocal="false" ]
-folderwatcher:ftpfolder:myLocalFolder [ ftpAddress="X.X.X.X", ftpPort=21, secureMode="EXPLICIT", ftpUsername="username", ftpPassword="password",ftpDir="/myfolder/",listHidden="true",listRecursiveFtp="true",connectionTimeout=33,pollInterval=66,diffHours=25]
+folderwatcher:ftpfolder:myFTPFolder [ ftpAddress="X.X.X.X", ftpPort=21, secureMode="EXPLICIT", ftpUsername="username", ftpPassword="password",ftpDir="/myfolder/",listHidden="true",listRecursiveFtp="true",connectionTimeout=33,pollInterval=66,diffHours=25]
 folderwatcher:s3bucket:myS3bucket [ s3BucketName="mypublic-bucket", pollIntervalS3=60, awsRegion="us-west-1", s3Anonymous="true" ]
 
 ```
@@ -72,7 +70,7 @@ FTP example:
 ```java
 rule "New FTP file"
 when 
-    Channel 'folderwatcher:ftpfolder:XXXXX:newfile' triggered
+    Channel 'folderwatcher:ftpfolder:myLocalFolder:newfile' triggered
 then
 
     logInfo('NewFTPFile', receivedEvent.toString())
@@ -85,7 +83,7 @@ Local folder example:
 ```java
 rule "New Local file"
 when 
-    Channel 'folderwatcher:localfolder:XXXXX:newfile' triggered
+    Channel 'folderwatcher:localfolder:myFTPFolder:newfile' triggered
 then
 
     logInfo('NewLocalFile', receivedEvent.toString())
@@ -98,7 +96,7 @@ S3 bucket example:
 ```java
 rule "New S3 file"
 when 
-    Channel 'folderwatcher:s3bucket:XXXXX:news3file' triggered
+    Channel 'folderwatcher:s3bucket:myS3bucket:newfile' triggered
 then
 
     logInfo('NewS3File', receivedEvent.toString())

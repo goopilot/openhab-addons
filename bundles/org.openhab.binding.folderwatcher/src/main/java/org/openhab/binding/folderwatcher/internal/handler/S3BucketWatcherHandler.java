@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.folderwatcher.internal.handler;
 
-import static org.openhab.binding.folderwatcher.internal.FolderWatcherBindingConstants.CHANNEL_NEWS3FILE;
+import static org.openhab.binding.folderwatcher.internal.FolderWatcherBindingConstants.CHANNEL_NEWFILE;
 
 import java.io.File;
 import java.io.IOException;
@@ -140,7 +140,7 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
 
             List<String> difS3Listing = new ArrayList<>(currentS3Listing);
             difS3Listing.removeAll(previousS3Listing);
-            difS3Listing.forEach(file -> triggerChannel(CHANNEL_NEWS3FILE, file));
+            difS3Listing.forEach(file -> triggerChannel(CHANNEL_NEWFILE, file));
 
             if (!difS3Listing.isEmpty()) {
                 WatcherCommon.saveNewListing(difS3Listing, currentS3ListingFile);
@@ -159,6 +159,7 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
         ScheduledFuture<?> executionJob = this.executionJob;
         if (executionJob != null) {
             executionJob.cancel(true);
+            executionJob = null;
         }
     }
 }

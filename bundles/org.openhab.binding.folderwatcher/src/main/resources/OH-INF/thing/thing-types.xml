@@ -128,7 +128,7 @@
 		<description>AWS S3 bucket to be watched</description>
 
 		<channels>
-			<channel id="news3file" typeId="newfile-channel"/>
+			<channel id="newfile" typeId="newfile-channel"/>
 		</channels>
 
 		<config-description>
