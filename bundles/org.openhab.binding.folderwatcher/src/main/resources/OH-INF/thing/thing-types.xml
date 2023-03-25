@@ -123,4 +123,31 @@
 			</parameter>
 		</config-description>
 	</thing-type>
+	<thing-type id="s3bucket">
+		<label>AWS S3 Bucket</label>
+		<description>AWS S3 bucket to be watched</description>
+
+		<channels>
+			<channel id="news3file" typeId="newfile-channel"/>
+		</channels>
+
+		<config-description>
+			<parameter name="S3BucketName" type="text" required="true">
+				<label>S3 bucket name</label>
+				<description>Name of the S3 bucket to be watched</description>
+			</parameter>
+			<parameter name="pollIntervalS3" type="integer" min="1" unit="s">
+				<label>Polling Interval</label>
+				<description>Interval for polling S3 bucket changes, sec</description>
+				<default>60</default>
+				<advanced>true</advanced>
+			</parameter>
+			<parameter name="Anonymous" type="boolean">
+				<label>Anonymous connection</label>
+				<default>false</default>
+				<description>Connect to anonymously (works for public buckets)</description>
+				<advanced>true</advanced>
+			</parameter>
+		</config-description>
+	</thing-type>
 </thing:thing-descriptions>
