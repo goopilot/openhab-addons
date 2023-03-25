@@ -81,7 +81,7 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
         updateStatus(ThingStatus.UNKNOWN);
 
         try {
-            previousS3Listing = WatcherCommon.initStorage(currentS3ListingFile, config.S3BucketName);
+            previousS3Listing = WatcherCommon.initStorage(currentS3ListingFile, config.s3BucketName);
         } catch (IOException e) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getMessage());
             logger.debug("Can't write file {}: {}", currentS3ListingFile, e.getMessage());
@@ -89,19 +89,19 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
         }
         region = null;
         for (Region reg : Region.regions()) {
-            if (reg.toString().equals(config.AWSRegion)) {
-                region = Region.of(config.AWSRegion);
+            if (reg.toString().equals(config.awsRegion)) {
+                region = Region.of(config.awsRegion);
             }
         }
         if (region == null) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "Please enter valid region");
             return;
         }
-        String accessKey = config.awskey;
-        String secretKey = config.awssecret;
+        String accessKey = config.awsKey;
+        String secretKey = config.awsSecret;
         AwsCredentials credentials;
 
-        if (config.Anonymous) {
+        if (config.s3Anonymous) {
             credentialsProvider = AnonymousCredentialsProvider.create();
         } else {
             if (accessKey != null && !accessKey.isBlank() && secretKey != null && !secretKey.isBlank()) {
@@ -117,7 +117,7 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
                         config.pollIntervalS3, TimeUnit.SECONDS);
             } else {
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                        "Polling interval can't be null or negative");
+                        "Polling interval must be greather then 0 seconds");
                 return;
             }
         }
@@ -127,12 +127,12 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
         List<String> currentS3Listing = new ArrayList<>();
         try {
             client = S3Client.builder().region(region).credentialsProvider(credentialsProvider).build();
-            ListObjectsRequest listObjects = ListObjectsRequest.builder().bucket(config.S3BucketName).build();
+            ListObjectsRequest listObjects = ListObjectsRequest.builder().bucket(config.s3BucketName).build();
             ListObjectsResponse res = client.listObjects(listObjects);
             List<S3Object> objects = res.contents();
 
             for (S3Object s3Obj : objects) {
-                if (s3Obj.key().startsWith(config.s3path)) {
+                if (s3Obj.key().startsWith(config.s3Path)) {
                     currentS3Listing.add(s3Obj.key());
                 }
             }

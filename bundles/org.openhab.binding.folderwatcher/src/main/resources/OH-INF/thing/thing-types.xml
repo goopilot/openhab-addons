@@ -62,13 +62,13 @@
 			</parameter>
 			<parameter name="connectionTimeout" type="integer" min="1" unit="s">
 				<label>Connection Timeout</label>
-				<description>Connection timeout for FTP request, sec</description>
+				<description>Connection timeout for FTP request, in seconds</description>
 				<default>30</default>
 				<advanced>true</advanced>
 			</parameter>
 			<parameter name="pollInterval" type="integer" min="1" unit="s">
 				<label>Polling Interval</label>
-				<description>Interval for polling folder changes, sec</description>
+				<description>Interval for polling folder changes, in seconds</description>
 				<default>60</default>
 				<advanced>true</advanced>
 			</parameter>
@@ -105,7 +105,7 @@
 			</parameter>
 			<parameter name="pollIntervalLocal" type="integer" min="1" unit="s">
 				<label>Polling Interval</label>
-				<description>Interval for polling folder changes, sec</description>
+				<description>Interval for polling folder changes, in seconds</description>
 				<default>60</default>
 				<advanced>true</advanced>
 			</parameter>
@@ -132,36 +132,36 @@
 		</channels>
 
 		<config-description>
-			<parameter name="S3BucketName" type="text" required="true">
+			<parameter name="s3BucketName" type="text" required="true">
 				<label>S3 bucket name</label>
 				<description>Name of the S3 bucket to be watched</description>
 			</parameter>
-			<parameter name="s3path" type="text">
+			<parameter name="s3Path" type="text">
 				<label>S3 path</label>
 				<description>S3 path (folder) to be monitored</description>
 			</parameter>
-			<parameter name="AWSRegion" type="text" required="true">
+			<parameter name="awsRegion" type="text" required="true">
 				<label>AWS Region</label>
 				<description>AWS Region of S3 bucket</description>
 			</parameter>
 			<parameter name="pollIntervalS3" type="integer" min="1" unit="s">
 				<label>Polling Interval</label>
-				<description>Interval for polling S3 bucket changes, sec</description>
+				<description>Interval for polling S3 bucket changes, in seconds</description>
 				<default>60</default>
 				<advanced>true</advanced>
 			</parameter>
-			<parameter name="Anonymous" type="boolean">
+			<parameter name="s3Anonymous" type="boolean">
 				<label>Anonymous connection</label>
 				<default>false</default>
 				<description>Connect anonymously (works for public buckets)</description>
 				<advanced>true</advanced>
 			</parameter>
-			<parameter name="awskey" type="text">
+			<parameter name="awsKey" type="text">
 				<label>AWS access key</label>
 				<description>AWS access key</description>
 				<advanced>true</advanced>
 			</parameter>
-			<parameter name="awssecret" type="text">
+			<parameter name="awsSecret" type="text">
 				<label>AWS secret</label>
 				<description>AWS secret</description>
 				<context>password</context>

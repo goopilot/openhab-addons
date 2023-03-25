@@ -1,50 +1,49 @@
 # FolderWatcher Binding
 
-This binding is intended to monitor S3, FTP and local folder and its subfolders and notify of new files
+This binding is intended to monitor FTP, local folder and S3 bucket and its subfolders and notify of new files
 
 ## Supported Things
 
-Currently the binding support 3 types of things: `ftpfolder`, `localfolder` and `s3bucket`.
+Currently the binding support three types of things: `ftpfolder`, `localfolder` and `s3bucket`.
 
 ## Thing Configuration
 
 The `ftpfolder` thing has the following configuration options:
 
-| Parameter   | Name         | Description                                                                                                            | Required | Default value |
-|-------------|--------------|------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| ftpAddress  | FTP server   | IP address of FTP server                                                                                               | yes      | n/a           |
-| ftpPort     | FTP port   | Port of FTP server                                                                                                       | yes      | 21            |
-| secureMode  | FTP Security | FTP Security                                                                                                           | yes      | None          |
-| ftpUsername | Username     | FTP user name                                                                                                          | yes      | n/a           |
-| ftpPassword | Password     | FTP password                                                                                                           | yes      | n/a           |
-| ftpDir      | RootDir      | Root directory to be watched                                                                                           | yes      | n/a           |
-| listRecursiveFtp | List Sub Folders | Allow listing of sub folders                                                                                  | yes      | No            |
-| listHidden  | List Hidden  | Allow listing of hidden files                                                                                          | yes      | false         |
-| connectionTimeout | Connection timeout, s | Connection timeout for FTP request                                                                      | yes      | 30            |
-| pollInterval | Polling interval, s | Interval for polling folder changes                                                                            | yes      | 60            |
-| diffHours   | Time stamp difference, h | How many hours back to analyze                                                                             | yes      | 24            |
+| Parameter         | Name                     | Description                         | Required | Default value |
+|-------------------|--------------------------|-------------------------------------|----------|---------------|
+| ftpAddress        | FTP server               | IP address of FTP server            | yes      | n/a           |
+| ftpPort           | FTP port                 | Port of FTP server                  | yes      | 21            |
+| secureMode        | FTP Security             | FTP Security                        | yes      | None          |
+| ftpUsername       | Username                 | FTP user name                       | yes      | n/a           |
+| ftpPassword       | Password                 | FTP password                        | yes      | n/a           |
+| ftpDir            | RootDir                  | Root directory to be watched        | yes      | n/a           |
+| listRecursiveFtp  | List Sub Folders         | Allow listing of sub folders        | yes      | No            |
+| listHidden        | List Hidden              | Allow listing of hidden files       | yes      | false         |
+| connectionTimeout | Connection timeout, s    | Connection timeout for FTP request  | yes      | 30            |
+| pollInterval      | Polling interval, s      | Interval for polling folder changes | yes      | 60            |
+| diffHours         | Time stamp difference, h | How many hours back to analyze      | yes      | 24            |
 
 The `localfolder` thing has the following configuration options:
 
-| Parameter   | Name         | Description                                                                                                            | Required | Default value |
-|-------------|--------------|------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| localDir    | Local Directory | Local directory to be watched                                                                                       | yes      | n/a           |
-| listHiddenLocal | List Hidden | Allow listing of hidden files                                                                                       | yes      | No            |
-| pollIntervalLocal | Polling interval, s | Interval for polling folder changes                                                                       | yes      | 60            |
-| listRecursiveLocal | List Sub Folders | Allow listing of sub folders                                                                                | yes      | No            |
+| Parameter          | Name                | Description                         | Required | Default value |
+|--------------------|---------------------|-------------------------------------|----------|---------------|
+| localDir           | Local Directory     | Local directory to be watched       | yes      | n/a           |
+| listHiddenLocal    | List Hidden         | Allow listing of hidden files       | yes      | No            |
+| pollIntervalLocal  | Polling interval, s | Interval for polling folder changes | yes      | 60            |
+| listRecursiveLocal | List Sub Folders    | Allow listing of sub folders        | yes      | No            |
 
 The `s3bucket` thing has the following configuration options:
 
-| Parameter   | Name         | Description                                                                                                            | Required | Default value |
-|-------------|--------------|------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| S3BucketName    | S3 bucket name | Name of the S3 bucket to be watched                                                                              | yes      | n/a           |
-| s3path | S3 path | S3 path (folder) to be monitored                                                                                                 | no       | n/a           |
-| pollIntervalS3 | Polling Interval | Interval for polling S3 bucket changes, sec                                                                     | yes      | 60            |
-| awskey | AWS access key | AWS access key                                                                                                            | no       | n/a           |
-| awssecret | AWS secret| AWS secret                                                                                                                  | no       | n/a           |
-| AWSRegion | AWS Region| AWS Region of S3 bucket                                                                                                     | yes      | ""            |
-| Anonymous | Anonymous connection| Connect anonymously (works for public buckets)                                                                    | yes      | true          |
-
+| Parameter      | Name                 | Description                                    | Required | Default value |
+|----------------|----------------------|------------------------------------------------|----------|---------------|
+| s3BucketName   | S3 bucket name       | Name of the S3 bucket to be watched            | yes      | n/a           |
+| s3Path         | S3 path              | S3 path (folder) to be monitored               | no       | n/a           |
+| pollIntervalS3 | Polling Interval     | Interval for polling S3 bucket changes, sec    | yes      | 60            |
+| awsKey         | AWS access key       | AWS access key                                 | no       | n/a           |
+| awsSecret      | AWS secret           | AWS secret                                     | no       | n/a           |
+| awsRegion      | AWS Region           | AWS Region of S3 bucket                        | yes      | ""            |
+| s3Anonymous      | Anonymous connection | Connect anonymously (works for public buckets) | yes      | true          |
 ## Events
 
 This binding currently supports the following events:
@@ -62,7 +61,7 @@ Thing configuration:
 ```java
 folderwatcher:localfolder:myLocalFolder [ localDir="/myfolder", pollIntervalLocal=60, listHiddenLocal="false", listRecursiveLocal="false" ]
 folderwatcher:ftpfolder:myLocalFolder [ ftpAddress="X.X.X.X", ftpPort=21, secureMode="EXPLICIT", ftpUsername="username", ftpPassword="password",ftpDir="/myfolder/",listHidden="true",listRecursiveFtp="true",connectionTimeout=33,pollInterval=66,diffHours=25]
-folderwatcher:s3bucket:myS3bucket [ S3BucketName="mypublic-buacket", pollIntervalS3=60, AWSRegion="us-west-1", Anonymous="true" ]
+folderwatcher:s3bucket:myS3bucket [ s3BucketName="mypublic-bucket", pollIntervalS3=60, awsRegion="us-west-1", s3Anonymous="true" ]
 
 ```
 
