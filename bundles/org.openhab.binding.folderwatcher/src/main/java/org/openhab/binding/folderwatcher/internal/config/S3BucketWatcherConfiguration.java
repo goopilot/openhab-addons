@@ -22,6 +22,10 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 @NonNullByDefault
 public class S3BucketWatcherConfiguration {
     public String S3BucketName = "";
+    public String s3path = "";
     public boolean Anonymous;
     public int pollIntervalS3;
+    public String awskey = "";
+    public String awssecret = "";
+    public String AWSRegion = "";
 }

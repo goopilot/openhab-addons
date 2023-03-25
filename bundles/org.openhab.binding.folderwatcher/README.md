@@ -1,10 +1,10 @@
 # FolderWatcher Binding
 
-This binding is intended to monitor FTP and local folder and its subfolders and notify of new files
+This binding is intended to monitor S3, FTP and local folder and its subfolders and notify of new files
 
 ## Supported Things
 
-Currently the binding support two types of things: `ftpfolder` and `localfolder`.
+Currently the binding support 3 types of things: `ftpfolder`, `localfolder` and `s3bucket`.
 
 ## Thing Configuration
 
@@ -33,6 +33,18 @@ The `localfolder` thing has the following configuration options:
 | pollIntervalLocal | Polling interval, s | Interval for polling folder changes                                                                       | yes      | 60            |
 | listRecursiveLocal | List Sub Folders | Allow listing of sub folders                                                                                | yes      | No            |
 
+The `s3bucket` thing has the following configuration options:
+
+| Parameter   | Name         | Description                                                                                                            | Required | Default value |
+|-------------|--------------|------------------------------------------------------------------------------------------------------------------------|----------|---------------|
+| S3BucketName    | S3 bucket name | Name of the S3 bucket to be watched                                                                              | yes      | n/a           |
+| s3path | S3 path | S3 path (folder) to be monitored                                                                                                 | no       | n/a           |
+| pollIntervalS3 | Polling Interval | Interval for polling S3 bucket changes, sec                                                                     | yes      | 60            |
+| awskey | AWS access key | AWS access key                                                                                                            | no       | n/a           |
+| awssecret | AWS secret| AWS secret                                                                                                                  | no       | n/a           |
+| AWSRegion | AWS Region| AWS Region of S3 bucket                                                                                                     | yes      | ""            |
+| Anonymous | Anonymous connection| Connect anonymously (works for public buckets)                                                                    | yes      | true          |
+
 ## Events
 
 This binding currently supports the following events:
@@ -40,7 +52,8 @@ This binding currently supports the following events:
 | Channel Type ID | Item Type    | Description                                                                            |
 |-----------------|--------------|----------------------------------------------------------------------------------------|
 | newftpfile | String       | A new file name discovered on FTP                                                      |
-| newlocalfile | String       | A new file name discovered on in local folder                                                      |
+| newlocalfile | String       | A new file name discovered in local folder                                                      |
+| news3file | String       | A new file name discovered in S3                                                    |
 
 ## Full Example
 
@@ -49,6 +62,8 @@ Thing configuration:
 ```java
 folderwatcher:localfolder:myLocalFolder [ localDir="/myfolder", pollIntervalLocal=60, listHiddenLocal="false", listRecursiveLocal="false" ]
 folderwatcher:ftpfolder:myLocalFolder [ ftpAddress="X.X.X.X", ftpPort=21, secureMode="EXPLICIT", ftpUsername="username", ftpPassword="password",ftpDir="/myfolder/",listHidden="true",listRecursiveFtp="true",connectionTimeout=33,pollInterval=66,diffHours=25]
+folderwatcher:s3bucket:myS3bucket [ S3BucketName="mypublic-buacket", pollIntervalS3=60, AWSRegion="us-west-1", Anonymous="true" ]
+
 ```
 
 ### Using in a rule:
@@ -75,6 +90,19 @@ when
 then
 
     logInfo('NewLocalFile', receivedEvent.toString())
+
+end
+```
+
+S3 bucket example:
+
+```java
+rule "New S3 file"
+when 
+    Channel 'folderwatcher:s3bucket:XXXXX:news3file' triggered
+then
+
+    logInfo('NewS3File', receivedEvent.toString())
 
 end
 ```

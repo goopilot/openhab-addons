@@ -136,6 +136,14 @@
 				<label>S3 bucket name</label>
 				<description>Name of the S3 bucket to be watched</description>
 			</parameter>
+			<parameter name="s3path" type="text">
+				<label>S3 path</label>
+				<description>S3 path (folder) to be monitored</description>
+			</parameter>
+			<parameter name="AWSRegion" type="text" required="true">
+				<label>AWS Region</label>
+				<description>AWS Region of S3 bucket</description>
+			</parameter>
 			<parameter name="pollIntervalS3" type="integer" min="1" unit="s">
 				<label>Polling Interval</label>
 				<description>Interval for polling S3 bucket changes, sec</description>
@@ -145,7 +153,18 @@
 			<parameter name="Anonymous" type="boolean">
 				<label>Anonymous connection</label>
 				<default>false</default>
-				<description>Connect to anonymously (works for public buckets)</description>
+				<description>Connect anonymously (works for public buckets)</description>
+				<advanced>true</advanced>
+			</parameter>
+			<parameter name="awskey" type="text">
+				<label>AWS access key</label>
+				<description>AWS access key</description>
+				<advanced>true</advanced>
+			</parameter>
+			<parameter name="awssecret" type="text">
+				<label>AWS secret</label>
+				<description>AWS secret</description>
+				<context>password</context>
 				<advanced>true</advanced>
 			</parameter>
 		</config-description>

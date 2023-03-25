@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.folderwatcher.internal.handler;
 
-import static org.openhab.binding.folderwatcher.internal.FolderWatcherBindingConstants.CHANNEL_NEWFILE;
+import static org.openhab.binding.folderwatcher.internal.FolderWatcherBindingConstants.CHANNEL_NEWS3FILE;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,11 +43,10 @@ import software.amazon.awssdk.regions.*;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
-import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
- * The {@link LocalFolderWatcherHandler} is responsible for handling commands, which are
+ * The {@link S3BucketWatcherHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author Alexandr Salamatov - Initial contribution
@@ -62,7 +61,7 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
     private List<String> previousS3Listing = new ArrayList<>();
     private @Nullable S3Client client;
     private @Nullable AwsCredentialsProvider credentialsProvider;
-    private @Nullable Region region = Region.US_WEST_1;
+    private @Nullable Region region;
 
     public S3BucketWatcherHandler(Thing thing) {
         super(thing);
@@ -81,10 +80,6 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
         config = getConfigAs(S3BucketWatcherConfiguration.class);
         updateStatus(ThingStatus.UNKNOWN);
 
-        // if (!Files.isDirectory(Paths.get(config.localDir))) {
-        // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "Local directory is not valid");
-        // return;
-        // }
         try {
             previousS3Listing = WatcherCommon.initStorage(currentS3ListingFile, config.S3BucketName);
         } catch (IOException e) {
@@ -92,60 +87,60 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
             logger.debug("Can't write file {}: {}", currentS3ListingFile, e.getMessage());
             return;
         }
-
-        String accessKey = "sdsd";
-        String secretKey = "fffff";
-        AwsCredentials credentials;
-        if (accessKey != null && !accessKey.isBlank() && secretKey != null && !secretKey.isBlank()) {
-            credentials = AwsBasicCredentials.create(accessKey, secretKey);
-        } else {
+        region = null;
+        for (Region reg : Region.regions()) {
+            if (reg.toString().equals(config.AWSRegion)) {
+                region = Region.of(config.AWSRegion);
+            }
+        }
+        if (region == null) {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "Please enter valid region");
             return;
         }
+        String accessKey = config.awskey;
+        String secretKey = config.awssecret;
+        AwsCredentials credentials;
+
         if (config.Anonymous) {
             credentialsProvider = AnonymousCredentialsProvider.create();
         } else {
-            credentialsProvider = StaticCredentialsProvider.create(credentials);
-        }
-        try {
-            // client = S3Client.builder().region(region).credentialsProvider(credentialsProvider).build();
-            // ListObjectsRequest listObjects = ListObjectsRequest.builder().bucket(config.S3BucketName).build();
-            // client.listObjects(listObjects);
-            // client.close();
-            refreshS3BucketInformation();
-        } catch (S3Exception e) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, "Can't connect to the bucket");
-            logger.debug("Can't connect to the bucket: {}", e.getMessage());
+            if (accessKey != null && !accessKey.isBlank() && secretKey != null && !secretKey.isBlank()) {
+                credentials = AwsBasicCredentials.create(accessKey, secretKey);
+                credentialsProvider = StaticCredentialsProvider.create(credentials);
+            }
         }
 
-        if (config.pollIntervalS3 > 0) {
-            updateStatus(ThingStatus.ONLINE);
-            executionJob = scheduler.scheduleWithFixedDelay(this::refreshS3BucketInformation, config.pollIntervalS3,
-                    config.pollIntervalS3, TimeUnit.SECONDS);
-        } else {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                    "Polling interval can't be null or negative");
-            return;
+        if (refreshS3BucketInformation()) {
+            if (config.pollIntervalS3 > 0) {
+                updateStatus(ThingStatus.ONLINE);
+                executionJob = scheduler.scheduleWithFixedDelay(this::refreshS3BucketInformation, config.pollIntervalS3,
+                        config.pollIntervalS3, TimeUnit.SECONDS);
+            } else {
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+                        "Polling interval can't be null or negative");
+                return;
+            }
         }
     }
 
-    private void refreshS3BucketInformation() {
+    private boolean refreshS3BucketInformation() {
         List<String> currentS3Listing = new ArrayList<>();
         try {
             client = S3Client.builder().region(region).credentialsProvider(credentialsProvider).build();
-
             ListObjectsRequest listObjects = ListObjectsRequest.builder().bucket(config.S3BucketName).build();
-
             ListObjectsResponse res = client.listObjects(listObjects);
             List<S3Object> objects = res.contents();
-            for (S3Object myValue : objects) {
-                currentS3Listing.add(myValue.key());
-            }
 
+            for (S3Object s3Obj : objects) {
+                if (s3Obj.key().startsWith(config.s3path)) {
+                    currentS3Listing.add(s3Obj.key());
+                }
+            }
             client.close();
 
             List<String> difS3Listing = new ArrayList<>(currentS3Listing);
             difS3Listing.removeAll(previousS3Listing);
-            difS3Listing.forEach(file -> triggerChannel(CHANNEL_NEWFILE, file));
+            difS3Listing.forEach(file -> triggerChannel(CHANNEL_NEWS3FILE, file));
 
             if (!difS3Listing.isEmpty()) {
                 WatcherCommon.saveNewListing(difS3Listing, currentS3ListingFile);
@@ -154,7 +149,9 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
         } catch (Exception e) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, "Can't connect to the bucket");
             logger.debug("Can't connect to the bucket: {}", e.getMessage());
+            return false;
         }
+        return true;
     }
 
     @Override
