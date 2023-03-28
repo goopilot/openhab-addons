@@ -42,7 +42,7 @@ The `s3bucket` thing has the following configuration options:
 | pollIntervalS3 | Polling Interval     | Interval for polling S3 bucket changes, in seconds | yes      | 60            |
 | awsKey         | AWS Access Key       | AWS access key                                     | no       | n/a           |
 | awsSecret      | AWS Secret           | AWS secret                                         | no       | n/a           |
-| awsRegion      | AWS Region           | AWS Region of S3 bucket                            | yes      | ""            |
+| awsRegion      | AWS Region           | AWS region of S3 bucket                            | yes      | ""            |
 | s3Anonymous    | Anonymous Connection | Connect anonymously (works for public buckets)     | yes      | true          |
 ## Events
 

@@ -142,7 +142,7 @@
 			</parameter>
 			<parameter name="awsRegion" type="text" required="true">
 				<label>AWS Region</label>
-				<description>AWS Region of S3 bucket</description>
+				<description>AWS region of S3 bucket</description>
 			</parameter>
 			<parameter name="pollIntervalS3" type="integer" min="1" unit="s">
 				<label>Polling Interval</label>
