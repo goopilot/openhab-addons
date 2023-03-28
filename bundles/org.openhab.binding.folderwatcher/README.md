@@ -35,15 +35,15 @@ The `localfolder` thing has the following configuration options:
 
 The `s3bucket` thing has the following configuration options:
 
-| Parameter      | Name                 | Description                                    | Required | Default value |
-|----------------|----------------------|------------------------------------------------|----------|---------------|
-| s3BucketName   | S3 bucket name       | Name of the S3 bucket to be watched            | yes      | n/a           |
-| s3Path         | S3 path              | S3 path (folder) to be monitored               | no       | n/a           |
-| pollIntervalS3 | Polling Interval     | Interval for polling S3 bucket changes, sec    | yes      | 60            |
-| awsKey         | AWS access key       | AWS access key                                 | no       | n/a           |
-| awsSecret      | AWS secret           | AWS secret                                     | no       | n/a           |
-| awsRegion      | AWS Region           | AWS Region of S3 bucket                        | yes      | ""            |
-| s3Anonymous    | Anonymous connection | Connect anonymously (works for public buckets) | yes      | true          |
+| Parameter      | Name                 | Description                                        | Required | Default value |
+|----------------|----------------------|----------------------------------------------------|----------|---------------|
+| s3BucketName   | S3 Bucket Name       | Name of the S3 bucket to be watched                | yes      | n/a           |
+| s3Path         | S3 Path              | S3 path (folder) to be monitored                   | no       | n/a           |
+| pollIntervalS3 | Polling Interval     | Interval for polling S3 bucket changes, in seconds | yes      | 60            |
+| awsKey         | AWS Access Key       | AWS access key                                     | no       | n/a           |
+| awsSecret      | AWS Secret           | AWS secret                                         | no       | n/a           |
+| awsRegion      | AWS Region           | AWS Region of S3 bucket                            | yes      | ""            |
+| s3Anonymous    | Anonymous Connection | Connect anonymously (works for public buckets)     | yes      | true          |
 ## Events
 
 This binding currently supports the following events:
