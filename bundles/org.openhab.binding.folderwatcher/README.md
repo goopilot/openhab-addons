@@ -50,7 +50,7 @@ This binding currently supports the following events:
 
 | Channel Type ID | Item Type | Description                |
 |-----------------|-----------|----------------------------|
-| newfile        | String    | A new file name discovered |
+| newfile         | String    | A new file name discovered |
 
 ## Full Example
 

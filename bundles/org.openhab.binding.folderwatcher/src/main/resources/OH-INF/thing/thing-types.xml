@@ -133,11 +133,11 @@
 
 		<config-description>
 			<parameter name="s3BucketName" type="text" required="true">
-				<label>S3 bucket name</label>
+				<label>S3 Bucket Name</label>
 				<description>Name of the S3 bucket to be watched</description>
 			</parameter>
 			<parameter name="s3Path" type="text">
-				<label>S3 path</label>
+				<label>S3 Path</label>
 				<description>S3 path (folder) to be monitored</description>
 			</parameter>
 			<parameter name="awsRegion" type="text" required="true">
@@ -151,18 +151,18 @@
 				<advanced>true</advanced>
 			</parameter>
 			<parameter name="s3Anonymous" type="boolean">
-				<label>Anonymous connection</label>
+				<label>Anonymous Connection</label>
 				<default>false</default>
 				<description>Connect anonymously (works for public buckets)</description>
 				<advanced>true</advanced>
 			</parameter>
 			<parameter name="awsKey" type="text">
-				<label>AWS access key</label>
+				<label>AWS Access Key</label>
 				<description>AWS access key</description>
 				<advanced>true</advanced>
 			</parameter>
 			<parameter name="awsSecret" type="text">
-				<label>AWS secret</label>
+				<label>AWS Secret</label>
 				<description>AWS secret</description>
 				<context>password</context>
 				<advanced>true</advanced>

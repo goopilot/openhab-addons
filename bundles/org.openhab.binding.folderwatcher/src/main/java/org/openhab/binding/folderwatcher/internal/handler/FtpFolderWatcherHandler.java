@@ -108,11 +108,11 @@ public class FtpFolderWatcherHandler extends BaseThingHandler {
         ScheduledFuture<?> initJob = this.initJob;
         if (executionJob != null) {
             executionJob.cancel(true);
-            executionJob = null;
+            this.executionJob = null;
         }
         if (initJob != null) {
             initJob.cancel(true);
-            initJob = null;
+            this.initJob = null;
         }
         if (ftp.isConnected()) {
             try {

@@ -78,7 +78,6 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
     @Override
     public void initialize() {
         config = getConfigAs(S3BucketWatcherConfiguration.class);
-        updateStatus(ThingStatus.UNKNOWN);
 
         try {
             previousS3Listing = WatcherCommon.initStorage(currentS3ListingFile, config.s3BucketName);
@@ -159,7 +158,7 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
         ScheduledFuture<?> executionJob = this.executionJob;
         if (executionJob != null) {
             executionJob.cancel(true);
-            executionJob = null;
+            this.executionJob = null;
         }
     }
 }
