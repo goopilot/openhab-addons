@@ -116,7 +116,7 @@ public class S3BucketWatcherHandler extends BaseThingHandler {
                         config.pollIntervalS3, TimeUnit.SECONDS);
             } else {
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                        "Polling interval must be greather then 0 seconds");
+                        "Polling interval must be greater then 0 seconds");
                 return;
             }
         }
